@@ -135,19 +135,38 @@ namespace UrlBox
         [DefaultValue(30_000)] // ms
         public TimeSpan? WaitTimeout { get; set; }
 
-        [DefaultValue(0)]
+        /// <summary>
+        /// Amount of time to wait in milliseconds before urlbox takes the screenshot or pdf
+        /// </summary>
         [DataMember(Name = "delay")]
-        public int Delay { get; set; }
+        [DefaultValue(0)]
+        public TimeSpan? Delay { get; set; }
 
+        /// <summary>
+        /// Blocks requests from popular ad-networks from loading
+        /// </summary>
         [DataMember(Name = "block_ads")]
         public bool? BlockAds { get; set; }
 
+        /// <summary>
+        /// Automatically hide cookie banners from most websites
+        /// </summary>
         [DataMember(Name = "hide_cookie_banners")]
         public bool? HideCookieBanners { get; set; }
 
+        [DataMember(Name = "disable_ligatures")]
+        public bool? DisableLigatures { get; set; }
+
+        /// <summary>
+        /// Automatically click accept buttons in order to hide popups
+        /// </summary>
         [DataMember(Name = "click_accept")]
         public bool? ClickAccept { get; set; }
 
+        /// <summary>
+        /// Element selector that is clicked before generating a screenshot or pdf e.g. #clickme would click the element with id="clickme".
+        /// Can be used multiple times to simulate multiple sequential click events.
+        /// </summary>
         [DataMember(Name = "click")]
         public string? Click { get; set; }
 
@@ -160,14 +179,25 @@ namespace UrlBox
         [DataMember(Name = "hide_selector")]
         public string? HideSelector { get; set; }
 
+        /// <summary>
+        /// Word to highlight on the page before capturing a screenshot or pdf
+        /// </summary>
         [DataMember(Name = "highlight")]
         public string? Highlight { get; set; }
 
-        [DataMember(Name = "highlight_fg")]
-        public int HighlightFg { get; set; }
+        /// <summary>
+        /// Text color of the highlighted word
+        /// </summary>
+        [DataMember(Name = "highlightfg")]
+        [DefaultValue("white")]
+        public string? HighlightFg { get; set; }
 
-        [DataMember(Name = "highlight_bg")]
-        public int HighlightBg { get; set; }
+        /// <summary>
+        /// Background color of the highlighted word
+        /// </summary>
+        [DataMember(Name = "highlightbg")]
+        [DefaultValue("red")]
+        public string? HighlightBg { get; set; }
 
         [DataMember(Name = "allow_infinite")]
         public bool? AllowInfinite { get; set; }
@@ -180,16 +210,17 @@ namespace UrlBox
         public bool? DetectFullHeight { get; set; }
 
         [DataMember(Name = "max_section_height")]
-        public int MaxSectionHeight { get; set; }
+        [DefaultValue(2098)]
+        public int? MaxSectionHeight { get; set; }
 
         [DataMember(Name = "max_height")]
-        public int MaxHeight { get; set; }
+        public int? MaxHeight { get; set; }
 
         [DataMember(Name = "scroll_increment")]
-        public int ScrollIncrement { get; set; }
+        public int? ScrollIncrement { get; set; }
 
         [DataMember(Name = "scroll_delay")]
-        public int ScrollDelay { get; set; }
+        public TimeSpan? ScrollDelay { get; set; }
 
         [DataMember(Name = "fail_if_selector_missing")]
         public bool? FailIfSelectorMissing { get; set; }
@@ -231,7 +262,7 @@ namespace UrlBox
             result = result.Replace("%28", "(");
             result = result.Replace("%29", ")");
 
-            return result; 
+            return result;
         }
 
         public IEnumerable<KeyValuePair<string, string>> GetParameters()
@@ -245,7 +276,8 @@ namespace UrlBox
                 if (value is int v && v == 0) continue;
                 if (value is double d && d == 0d) continue;
 
-                string fV = value switch {
+                string fV = value switch
+                {
                     bool b => b ? "true" : "false",
                     string s => s,
                     TimeSpan t => ((int)t.TotalMilliseconds).ToString(),
@@ -259,5 +291,5 @@ namespace UrlBox
         private static readonly SerializedProperty[] properties = Serializer.GetProperties(typeof(ScreenshotRequest));
     }
 
-    
+
 }
