@@ -273,8 +273,8 @@ namespace UrlBox
 
                 if (value is null) continue;
 
-                if (value is int v && v == 0) continue;
-                if (value is double d && d == 0d) continue;
+                if (value is 0) continue;
+                if (value is 0d) continue;
 
                 string fV = value switch
                 {
@@ -290,6 +290,4 @@ namespace UrlBox
 
         private static readonly SerializedProperty[] properties = Serializer.GetProperties(typeof(ScreenshotRequest));
     }
-
-
 }
