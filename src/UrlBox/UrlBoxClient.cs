@@ -11,7 +11,7 @@ namespace UrlBox
     {
         private const string baseUri = "https://api.urlbox.io/v1";
 
-        private readonly HttpClient httpClient = new HttpClient();
+        private readonly HttpClient httpClient = new ();
 
         private readonly string apiKey;
         private readonly byte[] apiSecret;
@@ -36,15 +36,13 @@ namespace UrlBox
             return ms;
         }
 
-        public Uri GetSignedUrl(ScreenshotRequest request)
+        public string GetSignedUrl(ScreenshotRequest request)
         {
             string queryString = request.ToQueryString();
 
             string signature = SignQueryString(queryString);
 
-            var url = baseUri + "/" + apiKey + "/" + signature + "/" + request.Format + queryString;
-
-            return new Uri(url);
+            return baseUri + "/" + apiKey + "/" + signature + "/" + request.Format + queryString;
         }
 
         private string SignQueryString(string queryString)
