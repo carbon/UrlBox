@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace UrlBox.Serialization
 {
-    internal class SerializedProperty
+    internal sealed class SerializedProperty
     {
         private readonly PropertyInfo property;
 
