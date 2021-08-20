@@ -16,7 +16,7 @@ namespace UrlBox.Tests
                 FullPage = true
             });
 
-            Assert.Equal("https://api.urlbox.io/v1/a/73c4b11b2d0cd3668c95c3d6dbaded519e708205/webp?format=webp&url=https%3a%2f%2fgoogle.com%2f&full_page=true", url);
+            Assert.Equal("https://api.urlbox.io/v1/a/af8e1a1ddc3eac195410260e5100e4003e2dd93f/webp?url=https%3A%2F%2Fgoogle.com%2F&full_page=true", url);
         }
     }
 }
