@@ -1,57 +1,71 @@
 ﻿using System;
+using System.Buffers;
 using System.IO;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UrlBox
+namespace UrlBox;
+
+public sealed class UrlBoxClient
 {
-    public sealed class UrlBoxClient
+    private const string baseUri = "https://api.urlbox.io/v1";
+
+    private readonly HttpClient httpClient = new ();
+
+    private readonly string _apiKey;
+    private readonly byte[] _apiSecret;
+
+    public UrlBoxClient(string apiKey, string apiSecret)
     {
-        private const string baseUri = "https://api.urlbox.io/v1";
+        ArgumentNullException.ThrowIfNull(apiKey);
+        ArgumentNullException.ThrowIfNull(apiSecret);
 
-        private readonly HttpClient httpClient = new ();
+        _apiKey = apiKey;
+        _apiSecret = Encoding.ASCII.GetBytes(apiSecret);
+    }
+ 
+    public async Task<MemoryStream> TakeScreenshotAsync(ScreenshotRequest request)
+    {
+        var url = GetSignedUrl(request);
 
-        private readonly string apiKey;
-        private readonly byte[] apiSecret;
+        using var response = await httpClient.GetAsync(url).ConfigureAwait(false);
+        using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-        public UrlBoxClient(string apiKey, string apiSecret)
+        var ms = new MemoryStream();
+
+        await stream.CopyToAsync(ms).ConfigureAwait(false);
+
+        return ms;
+    }
+
+    public string GetSignedUrl(ScreenshotRequest request)
+    {
+        string queryString = request.ToQueryString();
+
+        string signature = SignQueryString(queryString);
+
+        return $"{baseUri}/{_apiKey}/{signature}/{request.Format}{queryString}";
+    }
+
+    private string SignQueryString(string queryString)
+    {
+        var rentedBuffer = ArrayPool<byte>.Shared.Rent(Encoding.UTF8.GetMaxByteCount(queryString.Length));
+
+        try
         {
-            this.apiKey = apiKey ?? throw new ArgumentNullException(nameof(apiKey));
-            this.apiSecret = Encoding.ASCII.GetBytes(apiSecret);
+            int byteCount = Encoding.UTF8.GetBytes(queryString.AsSpan(1), rentedBuffer);
+
+            Span<byte> hash = stackalloc byte[20];
+
+            HMACSHA1.HashData(_apiSecret, rentedBuffer.AsSpan(0, byteCount), hash);
+
+            return Convert.ToHexString(hash).ToLowerInvariant();
         }
-     
-        public async Task<MemoryStream> TakeScreenshotAsync(ScreenshotRequest request)
+        finally
         {
-            var url = GetSignedUrl(request);
-
-            using var response = await httpClient.GetAsync(url).ConfigureAwait(false);
-            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-
-            var ms = new MemoryStream();
-
-            await stream.CopyToAsync(ms).ConfigureAwait(false);
-
-            return ms;
-        }
-
-        public string GetSignedUrl(ScreenshotRequest request)
-        {
-            string queryString = request.ToQueryString();
-
-            string signature = SignQueryString(queryString);
-
-            return baseUri + "/" + apiKey + "/" + signature + "/" + request.Format + queryString;
-        }
-
-        private string SignQueryString(string queryString)
-        {
-            using var hmac = new HMACSHA1(apiSecret);
-
-            byte[] hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(queryString.Substring(1)));
-
-            return BitConverter.ToString(hash).Replace("-", "").ToLower();
+            ArrayPool<byte>.Shared.Return(rentedBuffer);
         }
     }
 }

@@ -1,23 +1,22 @@
 ﻿using System.Reflection;
 using System.Runtime.Serialization;
 
-namespace UrlBox.Serialization
+namespace UrlBox.Serialization;
+
+internal sealed class SerializedProperty
 {
-    internal sealed class SerializedProperty
+    private readonly PropertyInfo _property;
+
+    public SerializedProperty(PropertyInfo property, DataMemberAttribute member)
     {
-        private readonly PropertyInfo property;
+        Name = member.Name!;
+        _property = property;
+    }
 
-        public SerializedProperty(PropertyInfo property, DataMemberAttribute member)
-        {
-            this.Name = member.Name;
-            this.property = property;
-        }
+    public string Name { get; }
 
-        public string Name { get; }
-
-        public object GetValue(object instance)
-        {
-            return property.GetValue(instance);
-        }
+    public object GetValue(object instance)
+    {
+        return _property.GetValue(instance)!;
     }
 }
