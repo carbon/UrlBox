@@ -1,8 +1,4 @@
-﻿using System;
-
-using Xunit;
-
-namespace UrlBox.Tests;
+﻿namespace UrlBox.Tests;
 
 public class ScreenshotClientTests
 {
