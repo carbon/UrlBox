@@ -7,9 +7,9 @@ namespace UrlBox.Serialization;
 
 internal static class Serializer
 {
-    public static SerializedProperty[] GetProperties(Type type)
+    public static SerializedProperty[] GetProperties<T>()
     {
-        var properties = type.GetProperties();
+        var properties = typeof(T).GetProperties();
 
         var list = new List<SerializedProperty>(properties.Length);
 

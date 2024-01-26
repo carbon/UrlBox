@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -267,9 +268,11 @@ public sealed class ScreenshotRequest
         return result;
     }
 
+    private static readonly SerializedProperty[] s_properties = Serializer.GetProperties<ScreenshotRequest>();
+
     public IEnumerable<KeyValuePair<string, string>> GetParameters()
     {
-        foreach (var property in properties)
+        foreach (var property in s_properties)
         {
             object value = property.GetValue(this);
 
@@ -279,13 +282,11 @@ public sealed class ScreenshotRequest
             {
                 bool b     => b ? "true" : "false",
                 string s   => s,
-                TimeSpan t => ((int)t.TotalMilliseconds).ToString(),
+                TimeSpan t => ((int)t.TotalMilliseconds).ToString(CultureInfo.InvariantCulture),
                 _          => value.ToString()!
             };
 
             yield return new(property.Name, fV);
         }
     }
-
-    private static readonly SerializedProperty[] properties = Serializer.GetProperties(typeof(ScreenshotRequest));
 }
