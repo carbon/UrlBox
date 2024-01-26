@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -10,6 +11,7 @@ namespace UrlBox;
 
 public sealed class ScreenshotRequest
 {
+    [SetsRequiredMembers]
     public ScreenshotRequest(Uri url, string format = "png")
     {
         Url = url.ToString();
@@ -19,7 +21,7 @@ public sealed class ScreenshotRequest
     public string Format { get; set; } // png, webp, jpg
 
     [DataMember(Name = "url")]
-    public string Url { get; set; }
+    public required string Url { get; set; }
 
     [DataMember(Name = "full_page")]
     public bool? FullPage { get; set; }
