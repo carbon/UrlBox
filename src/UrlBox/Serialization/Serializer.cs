@@ -22,6 +22,6 @@ internal static class Serializer
             list.Add(new SerializedProperty(property, dataMember));
         }
 
-        return list.ToArray();
+        return [.. list];
     }
 }
