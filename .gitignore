@@ -1,6 +1,4 @@
-
+/artifacts
 .vs/
-release/
-bin/
-obj/
 .DS_Store
+*.nupkg
