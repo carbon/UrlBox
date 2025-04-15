@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/UrlBox.Tests/UrlBox.Tests.csproj" />
+  <Project Path="src/UrlBox/UrlBox.csproj" />
+</Solution>
