@@ -6,11 +6,11 @@ namespace UrlBox.Models;
 public sealed class Error
 {
     [JsonPropertyName("message")]
-    public string? Message { get; set; }
+    public string? Message { get; init; }
 
     [JsonPropertyName("code")]
-    public string? Code { get; set; }
+    public string? Code { get; init; }
 
     [JsonPropertyName("errors")]
-    public JsonElement? Errors { get; set; }
+    public JsonElement? Errors { get; init; }
 }

@@ -8,8 +8,8 @@ public sealed class RenderAsyncResult
     public required string Status { get; set; }
 
     [JsonPropertyName("renderId")]
-    public required string RenderId { get; set; }
+    public required string RenderId { get; init; }
 
     [JsonPropertyName("statusUrl")]
-    public required string StatusUrl { get; set; }
+    public required string StatusUrl { get; init; }
 }
