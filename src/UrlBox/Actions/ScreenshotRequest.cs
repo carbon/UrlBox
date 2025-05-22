@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json.Serialization;
 
 using UrlBox.Serialization;
 
@@ -238,6 +239,12 @@ public sealed class ScreenshotRequest
     [DataMember(Name = "timeout")]
     // [DefaultValue(30_000)] // in ms
     public TimeSpan? Timeout { get; set; }
+
+    [DataMember(Name = "use_stealth", EmitDefaultValue = false)]
+    public bool? UseStealth { get; set; }
+
+    [DataMember(Name = "engine_version")]
+    public string? EngineVersion { get; set; }
 
     public string ToQueryString()
     {

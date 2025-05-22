@@ -591,7 +591,6 @@ public sealed class RenderRequest
 
     #endregion
 
-
     #region Storage Options
 
     [JsonPropertyName("use_s3")]
@@ -627,6 +626,48 @@ public sealed class RenderRequest
     [JsonPropertyName("gpu")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public bool Gpu { get; set; }
+
+    [JsonPropertyName("use_stealth")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool UseStealth { get; set; }
+
+    // stable | latest
+    [JsonPropertyName("engine_version")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public string? EngineVersion { get; set; }
+
+    #region Secure Mode
+
+    [JsonPropertyName("s3_presigned_url")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? S3PresignedUrl { get; set; }
+
+    [JsonPropertyName("save_metadata")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool SaveMetadata { get; set; }
+
+    [JsonPropertyName("s3_presigned_url_metadata")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? S3PresignedUrlMetadata { get; set; }
+
+    [JsonPropertyName("save_markdown")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool SaveMarkdown { get; set; }
+
+    [JsonPropertyName("s3_presigned_url_markdown")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? S3PresignedUrlMarkdown { get; set; }
+
+    [JsonPropertyName("save_html")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool SaveHtml { get; set; }
+
+    [JsonPropertyName("s3_presigned_url_html")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? S3PresignedUrlHtml { get; set; }
+
+
+    #endregion
 
     /// json | binary
     // [JsonPropertyName("response_type")]
